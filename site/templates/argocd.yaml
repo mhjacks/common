@@ -91,3 +91,14 @@ spec:
   tls:
     ca: {}
 status:
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  application.instanceLabelKey: {{ $.Values.global.pattern }}/{{ $.Values.site.name }}
+---
