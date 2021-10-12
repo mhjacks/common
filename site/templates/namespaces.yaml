@@ -36,4 +36,5 @@ metadata:
     argocd.argoproj.io/managed-by: {{ $.Values.global.pattern }}-{{ $.Values.site.name }}
   name: {{ $.Values.site.name }}-gitops-argocd-server
   # namespace: {{ . }}
+---
 {{- end }}
