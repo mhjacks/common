@@ -15,7 +15,7 @@ metadata:
     name: {{ $.Values.site.name }}-gitops-application-controller
     argocd.argoproj.io/managed-by: {{ $.Values.global.pattern }}-{{ $.Values.site.name }}
   name: {{ $.Values.site.name }}-gitops-application-controller
-  # namespace: {{ . }}
+  namespace: {{ . }}
 spec:
 ---
 apiVersion: v1
@@ -25,7 +25,7 @@ metadata:
     name: {{ $.Values.site.name }}-gitops-argocd-redis-ha
     argocd.argoproj.io/managed-by: {{ $.Values.global.pattern }}-{{ $.Values.site.name }}
   name: {{ $.Values.site.name }}-gitops-argocd-redis-ha
-  # namespace: {{ . }}
+  namespace: {{ . }}
 spec:
 ---
 apiVersion: v1
@@ -35,6 +35,6 @@ metadata:
     name: {{ $.Values.site.name }}-gitops-argocd-server
     argocd.argoproj.io/managed-by: {{ $.Values.global.pattern }}-{{ $.Values.site.name }}
   name: {{ $.Values.site.name }}-gitops-argocd-server
-  # namespace: {{ . }}
+  namespace: {{ . }}
 ---
 {{- end }}
