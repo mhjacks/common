@@ -8,4 +8,32 @@ metadata:
   name: {{ . }}
 spec:
 ---
+apiVersion: v1
+kind: Role
+metadata:
+  labels:
+    name: {{ $.Values.site.name }}-gitops-application-controller
+    argocd.argoproj.io/managed-by: {{ $.Values.global.pattern }}-{{ $.Values.site.name }}
+  name: {{ $.Values.site.name }}-gitops-application-controller
+  # namespace: {{ . }}
+spec:
+---
+apiVersion: v1
+kind: Role
+metadata:
+  labels:
+    name: {{ $.Values.site.name }}-gitops-argocd-redis-ha
+    argocd.argoproj.io/managed-by: {{ $.Values.global.pattern }}-{{ $.Values.site.name }}
+  name: {{ $.Values.site.name }}-gitops-argocd-redis-ha
+  # namespace: {{ . }}
+spec:
+---
+apiVersion: v1
+kind: Role
+metadata:
+  labels:
+    name: {{ $.Values.site.name }}-gitops-argocd-server
+    argocd.argoproj.io/managed-by: {{ $.Values.global.pattern }}-{{ $.Values.site.name }}
+  name: {{ $.Values.site.name }}-gitops-argocd-server
+  # namespace: {{ . }}
 {{- end }}
