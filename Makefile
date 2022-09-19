@@ -84,6 +84,35 @@ vault-unseal: ## unseals the vault
 load-secrets: ## loads the secrets into the vault
 	common/scripts/vault-utils.sh push_secrets common/pattern-vault.init
 
+### Testing targets for pattern-util.sh
+podman-validate-origin: ## verify the git origin is available
+	@echo Checking repo $(TARGET_REPO) - branch $(TARGET_BRANCH)
+	@common/scripts/pattern-util.sh git ls-remote --exit-code --heads $(TARGET_REPO) $(TARGET_BRANCH) >/dev/null && \
+		echo "$(TARGET_REPO) - $(TARGET_BRANCH) exists" || \
+		(echo "$(TARGET_BRANCH) not found in $(TARGET_REPO)"; exit 1)
+
+podman-deploy podman-upgrade: podman-validate-origin
+	common/scripts/pattern-util.sh helm upgrade --install $(NAME) common/install/ $(HELM_OPTS)
+
+podman-operator-deploy podman-operator-upgrade: podman-validate-origin ## runs helm install
+	common/scripts/pattern-util.sh helm upgrade --install $(NAME) common/operator-install/ $(HELM_OPTS)
+
+podman-vault-init: ## inits, unseals and configured the vault
+	common/scripts/pattern-util.sh common/scripts/vault-utils.sh vault_init common/pattern-vault.init
+	common/scripts/pattern-util.sh common/scripts/vault-utils.sh vault_unseal common/pattern-vault.init
+	common/scripts/pattern-util.sh common/scripts/vault-utils.sh vault_secrets_init common/pattern-vault.init
+
+podman-vault-unseal: ## unseals the vault
+	common/scripts/pattern-util.sh common/scripts/vault-utils.sh vault_unseal common/pattern-vault.init
+
+load-secrets: ## loads the secrets into the vault
+	common/scripts/pattern-util.sh common/scripts/vault-utils.sh push_secrets common/pattern-vault.init
+
+podman-uninstall: ## runs helm uninstall
+	$(eval CSV := $(shell common/scripts/pattern-util.sh oc get subscriptions -n openshift-operators openshift-gitops-operator -ojsonpath={.status.currentCSV}))
+	common/scripts/pattern-util.sh helm uninstall $(NAME)
+	@common/scripts/pattern-util.sh oc delete csv -n openshift-operators $(CSV)
+
 super-linter: ## Runs super linter locally
 	podman run -e RUN_LOCAL=true -e USE_FIND_ALGORITHM=true	\
 					-e VALIDATE_BASH=false \
