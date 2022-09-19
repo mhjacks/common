@@ -94,7 +94,7 @@ podman-validate-origin: ## verify the git origin is available
 podman-deploy podman-upgrade: podman-validate-origin
 	common/scripts/pattern-util.sh helm upgrade --install $(NAME) common/install/ $(HELM_OPTS)
 
-podman-operator-deploy podman-operator-upgrade: podman-validate-origin ## runs helm install
+podman-operator-deploy podman-operator-install podman-operator-upgrade: podman-validate-origin ## runs helm install
 	common/scripts/pattern-util.sh helm upgrade --install $(NAME) common/operator-install/ $(HELM_OPTS)
 
 podman-vault-init: ## inits, unseals and configured the vault
