@@ -1,0 +1,3 @@
+---
+- name: Retrieve secret material from local source
+  ansible.builtin.include_tasks: get_secret_material.yml
