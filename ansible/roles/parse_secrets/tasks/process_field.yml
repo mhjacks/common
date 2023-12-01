@@ -1,0 +1,5 @@
+---
+# Here is where we unwrap the different ways to set up secrets and extract them into viable ansible data structures
+- name: Debug
+  ansible.builtin.debug:
+    var: field

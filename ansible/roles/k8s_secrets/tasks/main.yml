@@ -1,17 +1,6 @@
 ---
 - name: "Inject kubernetes secrets"
-  kubernetes.core.k8s:
-    state: "{{ item.state | default('present') }}"
-    apply: "{{ item.apply | default(True) }}"
-    apply: "{{ item.force | default(False) }}"
-    definition:
-      kind: 'Secret'
-      apiVersion: 'v1'
-      metadata:
-        name: "{{ item.name }}"
-        namespace: "{{ item.namespace }}"
-        labels: "{{ item.labels | default({}) }}"
-        annotations: "{{ item.annotations | default({}) }}"
-      type: "{{ item.type | default('Opaque') }}"
-      stringData: "{{ item.data }}"
+  ansible.builtin.include_tasks: inject_k8s_secret.yml
   loop: "{{ secret_data }}"
+  loop_control:
+    loop_var: sd

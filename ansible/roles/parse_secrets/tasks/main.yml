@@ -1,3 +1,8 @@
 ---
+# Generate values_secrets_data
 - name: Retrieve secret material from local source
   ansible.builtin.include_tasks: get_secret_material.yml
+
+# Returns secret_data for injection
+- name: Secrets data into fields
+  ansible.builtin.include_tasks: parse_secret_material.yml
