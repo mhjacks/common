@@ -1,4 +1,4 @@
-# Copyright 2022 Red Hat, Inc.
+# Copyright 2022, 2023 Red Hat, Inc.
 # All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,6 +19,8 @@ Module that implements some common functions
 
 import configparser
 from collections.abc import MutableMapping
+
+import os.path
 
 
 def find_dupes(array):
@@ -102,3 +104,49 @@ def get_ini_value(inifile, inisection, inikey):
     config = configparser.ConfigParser()
     config.read(inifile)
     return config.get(inisection, inikey, fallback=None)
+
+def expand_path_value(p):
+    """
+    Expand a given filename, using both os.path.expandvars and os.path.expanduser
+
+    Parameters:
+        p(str): A pathname to be expanded
+
+    Returns:
+        obj: The expanded pathname
+    """
+    return os.path.expanduser(os.path.expandvars(p))
+
+def get_path_contents(p):
+    """
+    Return the contents of the path p
+
+    Parameters:
+        p(str): A pathname to retrieve the contents of.
+
+    Returns:
+        obj: The contents of the file as bytes. No attempt is made to decode the file.
+    """
+
+    with open(expand_path_value(p), 'rb') as f:
+        return f.read()
+
+def stringify_dict(d):
+    """
+    Return a copy of d mutated such that each element has been coerced to string.
+    This is to ensure that the object can be safely applied as labels or annotations
+    to a kubernetes secret object.
+
+    Parameters:
+        d(dict): The dict to coerce
+
+    Returns:
+
+        dict: The new dictionary, whose keys and values are all guaranteed to be strings
+    """
+    stringified_dict = {}
+
+    for (k, v) in d.items():
+        stringified_dict[str(k)] = str(v)
+
+    return stringified_dict
